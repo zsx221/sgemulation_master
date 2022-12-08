@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2013 (http://www.altova.com) by  () -->
+<xs:schema xmlns="urn:bcsis" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:p3="urn:iso:std:iso:20022:tech:xsd:prxy.003.002.01" xmlns:p4="urn:iso:std:iso:20022:tech:xsd:prxy.004.002.01" xmlns:head="urn:iso:std:iso:20022:tech:xsd:head.001.001.01" targetNamespace="urn:bcsis" elementFormDefault="qualified" attributeFormDefault="qualified">
+<xs:import namespace="urn:iso:std:iso:20022:tech:xsd:prxy.003.002.01" schemaLocation="messages_urn_iso_std_iso_20022_tech_xsd_prxy.003.002.01.xsd"/>
+<xs:import namespace="urn:iso:std:iso:20022:tech:xsd:prxy.004.002.01" schemaLocation="messages_urn_iso_std_iso_20022_tech_xsd_prxy.004.002.01.xsd"/>
+<xs:import namespace="urn:iso:std:iso:20022:tech:xsd:head.001.001.01" schemaLocation="messages_urn_iso_std_iso_20022_tech_xsd_head.001.001.01.xsd"/>
+<xs:element name="Message" type="HdrAndData"/>
+<xs:complexType name="HdrAndData">
+<xs:sequence>
+<xs:element name="AppHdr" type="head:BusinessApplicationHeaderV01"/>
+<xs:choice>
+<xs:element name="ProxyLookUp" type="p3:Document"/>
+<xs:element name="ProxyLookUpResponse" type="p4:Document"/>
+</xs:choice>
+</xs:sequence>
+</xs:complexType>
+</xs:schema>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:re="urn:iso:std:iso:20022:tech:xsd:admn.006.001.01"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="urn:iso:std:iso:20022:tech:xsd:admn.006.001.01"
+    elementFormDefault="qualified">
+  <xs:simpleType name="BICIdentifier">
+    <xs:annotation>
+      <xs:documentation source="Example">CHASUS33</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:pattern value="[A-Z]{6,6}[A-Z2-9][A-NP-Z0-9]([A-Z0-9]{3,3}){0,1}"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="BranchAndFinancialInstitutionIdentification4">
+    <xs:sequence>
+      <xs:element name="FinInstnId" type="re:FinancialInstitutionIdentification7"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Document">
+    <xs:sequence>
+      <xs:element name="AdmnEchoResp" type="re:EchoResponse"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="EchoCode">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="731"/>
+      <xs:length value="3"/>
+      <xs:pattern value="[0-9]{1,3}"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="EchoResp">
+    <xs:sequence>
+      <xs:element name="InstgAgt" type="re:BranchAndFinancialInstitutionIdentification4"/>
+      <xs:element name="InstdAgt" type="re:BranchAndFinancialInstitutionIdentification4"/>
+      <xs:element name="OrgnlInstrId" type="re:Max35Text"/>
+      <xs:element name="FnctnCd" type="re:EchoCode"/>
+      <xs:element name="TxSts" type="re:TransactionIndividualStatus3Code_Echo"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="EchoResponse">
+    <xs:annotation>
+      <xs:documentation source="Product/Usage 1">The Switch and a Bank will use the Echo Response message to reply to the Echo Request message.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="GrpHdr" type="re:GrpHdr">
+        <xs:annotation>
+          <xs:documentation source="Index">1.0</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="EchoResponse" type="re:EchoResp">
+        <xs:annotation>
+          <xs:documentation source="Index">2.0</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="FinancialInstitutionIdentification7">
+    <xs:sequence>
+      <xs:element name="BIC" type="re:BICIdentifier"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="GrpHdr">
+    <xs:sequence>
+      <xs:element name="MsgId" type="re:Max35Text"/>
+      <xs:element name="CreDtTm" type="re:ISODateTime"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="ISODateTime">
+    <xs:restriction base="xs:dateTime"/>
+  </xs:simpleType>
+  <xs:simpleType name="Max35Text">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="35"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="TransactionIndividualStatus3Code_Echo">
+    <xs:annotation>
+      <xs:documentation source="Example">ACTC</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="ACTC"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

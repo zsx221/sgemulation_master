@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2013 (http://www.altova.com) by pcvincent -->
+<xs:schema xmlns="urn:bcs" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:head="urn:iso:std:iso:20022:tech:xsd:head.001.001.01" xmlns:bs="urn:iso:std:iso:20022:tech:xsd:stmt.003.001.01" targetNamespace="urn:bcs" elementFormDefault="qualified" attributeFormDefault="qualified">
+	<xs:import namespace="urn:iso:std:iso:20022:tech:xsd:head.001.001.01" schemaLocation="head.001.001.01.xsd"/>
+	<xs:import namespace="urn:iso:std:iso:20022:tech:xsd:stmt.003.001.01" schemaLocation="stmt.003.001.01.xsd"/>
+	<xs:element name="Message" type="HdrAndData"/>	
+	<xs:complexType name="HdrAndData">
+		<xs:sequence>
+			<xs:element name="AppHdr" type="head:BusinessApplicationHeaderV01"/>
+			<xs:element name="BkToCstmrStmt" type="bs:Document"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

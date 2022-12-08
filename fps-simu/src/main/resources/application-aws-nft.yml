@@ -1,0 +1,57 @@
+#AWS-NFT环境，存于198服务器上
+spring:
+  jpa:
+    hibernate:
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+      ddl-auto: create
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        temp.use_jdbc_metadata_defaults: false
+  datasource:
+#    url: jdbc:mysql://sgall-mysql.default.svc.cluster.local:3306/sgfps?allowPublicKeyRetrieval=true&useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
+#    username: root
+#    password: mysql@123
+    url: jdbc:postgresql://opf-postgres.cx5abd0ylvg3.ap-southeast-1.rds.amazonaws.com:5432/postgres?currentSchema=public
+    username: phxg3admin
+    password: password
+    driver-class-name: org.postgresql.Driver
+    #data: classpath:opf.sql
+
+    hikari:
+      maximum-pool-size: 100
+      connection-test-query: SELECT 1
+      connection-timeout: 30000
+      max-lifetime: 1800000
+      pool-name: SGFPSHikariCP
+      idle-timeout: 600000
+    #data: classpath:opf.sql
+    platform: mysql
+    initialization-mode: always
+  application:
+    name: fps
+  devtools:
+    restart:
+      enabled: true
+  session:
+    timeout: 36000S
+  ldap:
+#    urls: ldap://ldaps-service.default.svc.cluster.local:636  #636
+#    username: cn=admin,${spring.ldap.base}
+#    password: 1234567
+#    base: dc=example,dc=com
+    urls: ldap://18.139.147.198:389  #636
+    username: cn=SACH_HSM_12,${spring.ldap.base}
+    password: hadoop
+    base: o=Singapore Automated Clearing House,c=SG
+server:
+  port: 9090
+  max-http-header-size: 102400
+#  port: 8080
+  servlet:
+    context-path: /sgfps
+    session:
+      timeout: 36000S
+

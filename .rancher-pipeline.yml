@@ -1,0 +1,24 @@
+stages:
+- name: Build
+  steps:
+  - runScriptConfig:
+      image: 192.168.0.63:8888/public/maven:3.8.1-jdk-8-settings
+      shellScript: |-
+        mvn install:install-file -Dfile=/cloudhsm-3.1.2.jar -DgroupId=com.cavium  -DartifactId=cloudhsm -Dversion=3.1.2 -Dpackaging=jar
+        mvn  install
+- name: Publish
+  steps:
+  - publishImageConfig:
+      dockerfilePath: ./Dockerfile
+      buildContext: .
+      tag: fis/sgemulation:${CICD_EXECUTION_SEQUENCE}
+      pushRemote: true
+      registry: 192.168.0.63:8888
+    env:
+      PLUGIN_DEBUG: "true"
+      PLUGIN_INSECURE: "true"
+- name: Deploy
+  steps:
+  - applyYamlConfig:
+      path: ./deployment.yaml
+notification: {}

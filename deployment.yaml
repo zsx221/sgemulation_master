@@ -1,0 +1,91 @@
+kind: Service
+apiVersion: v1
+metadata:
+  namespace: default
+  name: sgemulation-service
+spec:
+  selector:
+    app: sgemulation
+  type: NodePort
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+      nodePort: 30626
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: default
+  name: sgemulation
+  labels:
+    app: sgemulation
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sgemulation
+  template:
+    metadata:
+      labels:
+        app: sgemulation
+        logging: "true"
+    spec:
+      imagePullSecrets:
+      - name: docker63
+      containers:
+      - name: sgemulation
+        image: ${CICD_IMAGE}:${CICD_EXECUTION_SEQUENCE}
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - name: pv-sgemulation-pipeline
+          mountPath: /data/fps
+      volumes:
+      - name: pv-sgemulation-pipeline
+        persistentVolumeClaim:
+          claimName: pv-sgemulation-pipeline
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  namespace: default
+  name: pv-sgemulation-pipeline
+  labels:
+    pv: pv-sgemulation-pipeline
+spec:
+  capacity:
+    storage: 1Gi
+  volumeMode: Filesystem
+  accessModes:
+  - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Delete
+  storageClassName: local-storage
+  hostPath:
+    path: /data/k8s/localpv/sgemulation-pipeline
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - worker1
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: pv-sgemulation-pipeline
+  namespace: default
+  labels:
+    app: sgemulation-pipeline
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: "local-storage"
+  selector:
+    matchLabels:
+      pv: pv-sgemulation-pipeline

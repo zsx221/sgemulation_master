@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema 
+	xmlns="urn:iso:std:iso:20022:tech:xsd:stmt.001.001.01" 
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+	targetNamespace="urn:iso:std:iso:20022:tech:xsd:stmt.001.001.01" 
+	elementFormDefault="qualified">
+
+	<xs:element name="BankStatementRequest" type="Document"/> 
+	
+	<xs:complexType name="Document">
+		<xs:sequence>
+			<xs:element name="BankStmtReq" type="BankStmtReq"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="BankStmtReq">
+		<xs:sequence>
+			<xs:element name="GrpHdr" type="GrpHdr"></xs:element>
+			<xs:element name="StmtReq" type="StmtReq"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="GrpHdr">
+		<xs:sequence>
+			<xs:element name="MsgId" type="Max35Text"></xs:element>
+			<xs:element name="CreDtTm" type="ISODateTime"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="StmtReq">
+		<xs:sequence>
+			<xs:element name="Ccy" type="ActiveOrHistoricCurrencyCode"></xs:element>
+			<xs:element name="InstrId" type="Max35Text"></xs:element>
+			<xs:element name="FrToDt" type="DateTimePeriodDetails"></xs:element>
+			<xs:element name="InstgAgt" type="BranchAndFinancialInstitutionIdentification4"></xs:element>
+			<xs:element name="InstdAgt" type="BranchAndFinancialInstitutionIdentification4"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	
+	
+	<xs:complexType name="DateTimePeriodDetails">
+		<xs:sequence>
+			<xs:element name="FrDtTm" type="ISODateTime" minOccurs="0"/>
+			<xs:element name="ToDtTm" type="ISODateTime" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	
+	
+	<xs:complexType name="BranchAndFinancialInstitutionIdentification4">
+		<xs:sequence>
+			<xs:element name="FinInstnId" type="FinancialInstitutionIdentification7"/>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="FinancialInstitutionIdentification7">
+		<xs:sequence>
+			<xs:element maxOccurs="1" minOccurs="0" name="ClrSysMmbId" type="ClearingSystemMemberIdentification2"/>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="ClearingSystemMemberIdentification2">
+		<xs:sequence>
+			<xs:element name="MmbId" type="Max35Text"/>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:simpleType name="ISODateTime">
+  	<xs:restriction base="xs:dateTime"/>
+  </xs:simpleType>
+	<xs:simpleType name="ActiveOrHistoricCurrencyCode">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[A-Z]{3,3}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Max35Text">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="35"/>
+		</xs:restriction>
+	</xs:simpleType>  
+</xs:schema>

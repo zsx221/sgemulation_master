@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:p3="urn:iso:std:iso:20022:tech:xsd:prxy.003.001.01"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="urn:iso:std:iso:20022:tech:xsd:prxy.003.001.01"
+    elementFormDefault="qualified">
+  <xs:simpleType name="BICFIIdentifier">
+    <xs:annotation>
+      <xs:documentation source="Example">BANKSGSGXXX</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:pattern value="[A-Z]{6,6}[A-Z2-9][A-NP-Z0-9]([A-Z0-9]{3,3}){0,1}"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="BranchAndFinancialInstitutionIdentification5">
+    <xs:sequence>
+      <xs:element name="FinInstnId" type="p3:FinancialInstitutionIdentification8"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="CashAccountType2ChoiceProxy">
+    <xs:choice>
+      <xs:element name="Prtry" type="p3:ProxyAccountType">
+        <xs:annotation>
+          <xs:documentation source="Example">BANK</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="Document">
+    <xs:sequence>
+      <xs:element name="PrxyLookUp" type="p3:ProxyLookUpV01"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="FinancialInstitutionIdentification8">
+    <xs:sequence>
+      <xs:element name="BICFI" type="p3:BICFIIdentifier"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="GroupHeader69">
+    <xs:sequence>
+      <xs:element name="MsgId" type="p3:Max35Text"/>
+      <xs:element name="CreDtTm" type="p3:ISODateTime"/>
+      <xs:element name="MsgSndr" type="p3:Party12Choice"/>
+      <xs:element name="TpOfSubmitr" type="p3:SubmitterType1Choice" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="ISODateTime">
+    <xs:restriction base="xs:dateTime"/>
+  </xs:simpleType>
+  <xs:simpleType name="Max12Text">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="12"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="Max140Text">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="140"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="Max35Text">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="35"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="Party12Choice">
+    <xs:choice>
+      <xs:element name="Agt" type="p3:BranchAndFinancialInstitutionIdentification5"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:simpleType name="ProxyAccountType">
+    <xs:annotation>
+      <xs:documentation source="Example">BANK</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="BANK"/>
+      <xs:minLength value="1"/>
+      <xs:maxLength value="4"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="ProxyDefintion1">
+    <xs:sequence>
+      <xs:element name="Tp" type="p3:Max12Text"/>
+      <xs:element name="Val" type="p3:Max140Text"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ProxyLookUp11">
+    <xs:sequence>
+      <xs:element name="Id" type="p3:Max35Text"/>
+      <xs:element name="PrxyRtrvl" type="p3:ProxyDefintion1"/>
+      <xs:element name="PrxyRqstr" type="p3:ProxyDefintion1" minOccurs="0"/>
+      <xs:element name="DsplNm" type="p3:Max140Text" minOccurs="0"/>
+      <xs:element name="AcctTp" type="p3:CashAccountType2ChoiceProxy" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ProxyLookUpChoice1">
+    <xs:choice>
+      <xs:element name="PrxyOnly" type="p3:ProxyLookUp11"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="ProxyLookUpV01">
+    <xs:annotation>
+      <xs:documentation source="Product/Usage 1">This message is use to request a Proxy Look-Up with CAS.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="GrpHdr" type="p3:GroupHeader69">
+        <xs:annotation>
+          <xs:documentation source="Index">1.0</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="LookUp" type="p3:ProxyLookUpChoice1">
+        <xs:annotation>
+          <xs:documentation source="Index">2.0</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="SubmitterType1Choice">
+    <xs:choice>
+      <xs:element name="Cd" type="p3:SubmitterType1Code"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:simpleType name="SubmitterType1Code">
+    <xs:annotation>
+      <xs:documentation source="Example">BANK</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="BANK"/>
+      <xs:enumeration value="CNTR"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

@@ -1,0 +1,40 @@
+spring:
+  jpa:
+    hibernate:
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+      ddl-auto: update
+    show-sql: true
+  datasource:
+    url: jdbc:mysql://sgall-mysql.default.svc.cluster.local:3306/sgfps?allowPublicKeyRetrieval=true&useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
+    username: root
+    password: mysql@123
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    #data: classpath:opf.sql
+    platform: mysql
+    initialization-mode: always
+  application:
+    name: fps
+  devtools:
+    restart:
+      enabled: true
+  session:
+    timeout: 36000S
+  ldap:
+#    urls: ldap://ldaps-service.default.svc.cluster.local:636  #636
+#    username: cn=admin,${spring.ldap.base}
+#    password: 1234567
+#    base: dc=example,dc=com
+    urls: ldap://192.168.0.66:32301  #636
+    username: cn=admin,${spring.ldap.base}
+    password: 123456
+    base: dc=example,dc=com
+server:
+  port: 9090
+  max-http-header-size: 102400
+#  port: 8080
+  servlet:
+    context-path: /sgfps
+    session:
+      timeout: 36000S
+

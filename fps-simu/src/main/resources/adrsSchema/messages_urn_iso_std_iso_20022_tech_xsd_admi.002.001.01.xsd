@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:mr="urn:iso:std:iso:20022:tech:xsd:admi.002.001.01"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="urn:iso:std:iso:20022:tech:xsd:admi.002.001.01"
+    elementFormDefault="qualified">
+  <xs:complexType name="Document">
+    <xs:sequence>
+      <xs:element name="admi.002.001.01" type="mr:MessageRejectV01"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="Max20000Text">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="20000"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="Max35Text">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="35"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="MessageReference">
+    <xs:sequence>
+      <xs:element name="Ref" type="mr:Max35Text"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="MessageRejectV01">
+    <xs:sequence>
+      <xs:element name="RltdRef" type="mr:MessageReference">
+        <xs:annotation>
+          <xs:documentation source="Product/Usage 1">Usage of the Related Reference element is not according to the ISO 20022 standard usage. The reference provided in this element is a newly generated reference to identify the message reject.</xs:documentation>
+          <xs:documentation source="Index">1.0</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Rsn" type="mr:RejectionReason2">
+        <xs:annotation>
+          <xs:documentation source="Index">2.0</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="RejectionReason2">
+    <xs:sequence>
+      <xs:element name="RjctgPtyRsn" type="mr:Max35Text"/>
+      <xs:element name="AddtlData" type="mr:Max20000Text" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

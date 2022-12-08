@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema 
+	xmlns="urn:iso:std:iso:20022:tech:xsd:admn.003.001.01" 
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+	targetNamespace="urn:iso:std:iso:20022:tech:xsd:admn.003.001.01" 
+	elementFormDefault="qualified">
+	
+	<xs:element name="SignOffRequest" type="Document"/> 
+	
+	<xs:complexType name="Document">
+		<xs:sequence>
+			<xs:element name="AdmnSignOffReq" type="AdmnSignOffReq"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="AdmnSignOffReq">
+		<xs:sequence>
+			<xs:element name="GrpHdr" type="GrpHdr"></xs:element>
+			<xs:element name="SignOffReq" type="SignOffReq"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="GrpHdr">
+		<xs:sequence>
+			<xs:element name="MsgId" type="Max35Text"></xs:element>
+			<xs:element name="CreDtTm" type="ISODateTime"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="SignOffReq">
+		<xs:sequence>
+			<xs:element name="InstrId" type="Max35Text"></xs:element>
+			<xs:element name="InstgAgt" type="BranchAndFinancialInstitutionIdentification4"></xs:element>
+			<xs:element name="InstdAgt" type="BranchAndFinancialInstitutionIdentification4"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="BranchAndFinancialInstitutionIdentification4">
+		<xs:sequence>
+			<xs:element name="FinInstnId" type="FinancialInstitutionIdentification7"/>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="FinancialInstitutionIdentification7">
+		<xs:sequence>
+			<xs:element maxOccurs="1" minOccurs="0" name="ClrSysMmbId" type="ClearingSystemMemberIdentification2"/>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="ClearingSystemMemberIdentification2">
+		<xs:sequence>
+			<xs:element name="MmbId" type="Max35Text"/>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:simpleType name="ISODateTime">
+		<xs:restriction base="xs:dateTime"/>
+	</xs:simpleType>
+	<xs:simpleType name="Max35Text">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="35"/>
+		</xs:restriction>
+	</xs:simpleType> 
+</xs:schema>

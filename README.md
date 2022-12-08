@@ -1,0 +1,1 @@
+新加坡仿真项目代码存放，该项目的其他文档资料存放在Emulation\sgemulation文件夹中

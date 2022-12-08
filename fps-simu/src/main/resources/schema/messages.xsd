@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema 
+   xmlns="urn:bcsis" 
+   xmlns:xsd="http://www.w3.org/2001/XMLSchema"  	
+   xmlns:head="urn:iso:std:iso:20022:tech:xsd:head.001.001.01"
+   xmlns:ct="urn:iso:std:iso:20022:tech:xsd:pacs.008.001.02"
+   xmlns:dd="urn:iso:std:iso:20022:tech:xsd:pacs.003.001.02"
+   xmlns:ps="urn:iso:std:iso:20022:tech:xsd:pacs.002.001.03"
+   xmlns:pc="urn:iso:std:iso:20022:tech:xsd:camt.056.001.01"
+   xmlns:pr="urn:iso:std:iso:20022:tech:xsd:pacs.007.001.02"
+   xmlns:ri="urn:iso:std:iso:20022:tech:xsd:camt.029.001.03"
+   xmlns:er="urn:iso:std:iso:20022:tech:xsd:admn.005.001.01"
+   xmlns:re="urn:iso:std:iso:20022:tech:xsd:admn.006.001.01"
+   xmlns:fr="urn:iso:std:iso:20022:tech:xsd:admn.003.001.01"
+   xmlns:rf="urn:iso:std:iso:20022:tech:xsd:admn.004.001.01"
+   xmlns:sr="urn:iso:std:iso:20022:tech:xsd:admn.001.001.01"
+   xmlns:rs="urn:iso:std:iso:20022:tech:xsd:admn.002.001.01"
+   xmlns:ne="urn:iso:std:iso:20022:tech:xsd:admi.004.001.01"
+   xmlns:mr="urn:iso:std:iso:20022:tech:xsd:admi.002.001.01"
+   xmlns:br="urn:iso:std:iso:20022:tech:xsd:stmt.001.001.01"
+   xmlns:bp="urn:iso:std:iso:20022:tech:xsd:stmt.002.001.01"
+   xmlns:bs="urn:iso:std:iso:20022:tech:xsd:camt.053.001.02"
+   elementFormDefault="qualified" 	
+   targetNamespace="urn:bcsis">
+
+  <xsd:import namespace="urn:iso:std:iso:20022:tech:xsd:head.001.001.01"
+	      schemaLocation="head.001.001.01.xsd" /> 
+  <xsd:import namespace="urn:iso:std:iso:20022:tech:xsd:pacs.008.001.02"
+	      schemaLocation="pacs.008.001.02.xsd" /> 
+  <xsd:import namespace="urn:iso:std:iso:20022:tech:xsd:pacs.003.001.02"
+	      schemaLocation="pacs.003.001.02.xsd" /> 
+  <xsd:import namespace="urn:iso:std:iso:20022:tech:xsd:pacs.002.001.03"
+          schemaLocation="pacs.002.001.03.xsd" />
+  <xsd:import namespace="urn:iso:std:iso:20022:tech:xsd:camt.056.001.01"
+          schemaLocation="camt.056.001.01.xsd" />
+  <xsd:import namespace="urn:iso:std:iso:20022:tech:xsd:pacs.007.001.02"
+	      schemaLocation="pacs.007.001.02.xsd" /> 
+  <xsd:import namespace="urn:iso:std:iso:20022:tech:xsd:camt.029.001.03"
+          schemaLocation="camt.029.001.03.xsd" />
+  <xsd:import namespace="urn:iso:std:iso:20022:tech:xsd:admn.005.001.01"
+		  schemaLocation="admn.005.001.01.xsd" />
+  <xsd:import namespace="urn:iso:std:iso:20022:tech:xsd:admn.006.001.01"
+          schemaLocation="admn.006.001.01.xsd" />
+  <xsd:import namespace="urn:iso:std:iso:20022:tech:xsd:admn.003.001.01"
+              schemaLocation="admn.003.001.01.xsd" />
+  <xsd:import namespace="urn:iso:std:iso:20022:tech:xsd:admn.004.001.01"
+              schemaLocation="admn.004.001.01.xsd" />
+  <xsd:import namespace="urn:iso:std:iso:20022:tech:xsd:admn.001.001.01"
+              schemaLocation="admn.001.001.01.xsd" />
+  <xsd:import namespace="urn:iso:std:iso:20022:tech:xsd:admn.002.001.01"
+              schemaLocation="admn.002.001.01.xsd" />
+  <xsd:import namespace="urn:iso:std:iso:20022:tech:xsd:admi.004.001.01"
+	      schemaLocation="admi.004.001.01.xsd" />
+  <xsd:import namespace="urn:iso:std:iso:20022:tech:xsd:admi.002.001.01"
+	      schemaLocation="admi.002.001.01.xsd" />		  
+  <xsd:import namespace="urn:iso:std:iso:20022:tech:xsd:stmt.001.001.01"
+	      schemaLocation="stmt.001.001.01.xsd" />
+  <xsd:import namespace="urn:iso:std:iso:20022:tech:xsd:stmt.002.001.01"
+	      schemaLocation="stmt.002.001.01.xsd" />
+  <xsd:import namespace="urn:iso:std:iso:20022:tech:xsd:camt.053.001.02"
+	      schemaLocation="camt.053.001.02.xsd" />
+
+  <xsd:complexType name="HdrAndData">
+    <xsd:sequence>
+      <xsd:element name="AppHdr" type="head:BusinessApplicationHeaderV01"/>
+      <xsd:choice>
+	      <xsd:element name="CreditTransfer" type="ct:Document"/>
+	      <xsd:element name="DirectDebit" type="dd:Document"/>
+	      <xsd:element name="PaymentStatus" type="ps:Document"/>
+	      <xsd:element name="PaymentCancellation" type="pc:Document"/>
+	      <xsd:element name="PaymentReversal" type="pr:Document"/>
+	      <xsd:element name="ResolutionOfInvestigation" type="ri:Document"/>
+	      <xsd:element name="EchoRequest" type="er:Document"/>
+	      <xsd:element name="EchoResponse" type="re:Document"/>
+	      <xsd:element name="SignOffRequest" type="fr:Document"/>
+	      <xsd:element name="SignOffResponse" type="rf:Document"/>
+	      <xsd:element name="SignOnRequest" type="sr:Document"/>
+	      <xsd:element name="SignOnResponse" type="rs:Document"/>
+	      <xsd:element name="SystemNotificationEvent" type="ne:Document"/>
+		  <xsd:element name="MessageReject" type="mr:Document"/>
+	      <xsd:element name="BankStatementRequest" type="br:Document"/>
+	      <xsd:element name="BankStatementResponse" type="bp:Document"/>
+	      <xsd:element name="BankStatement" type="bs:Document"/>
+      </xsd:choice>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:element name="Message" type="HdrAndData"/>
+
+</xsd:schema>

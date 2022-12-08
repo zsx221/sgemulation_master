@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:er="urn:iso:std:iso:20022:tech:xsd:admn.005.001.01"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="urn:iso:std:iso:20022:tech:xsd:admn.005.001.01"
+    elementFormDefault="qualified">
+  <xs:simpleType name="BICIdentifier">
+    <xs:annotation>
+      <xs:documentation source="Example">CHASUS33</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:pattern value="[A-Z]{6,6}[A-Z2-9][A-NP-Z0-9]([A-Z0-9]{3,3}){0,1}"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="BranchAndFinancialInstitutionIdentification4">
+    <xs:sequence>
+      <xs:element name="FinInstnId" type="er:FinancialInstitutionIdentification7"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Document">
+    <xs:sequence>
+      <xs:element name="AdmnEchoReq" type="er:EchoRequest"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="EchoCode">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="731"/>
+      <xs:length value="3"/>
+      <xs:pattern value="[0-9]{1,3}"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="EchoRequest">
+    <xs:annotation>
+      <xs:documentation source="Product/Usage 1">
+The Switch and a Bank will use the Echo Request message to perform the connectivity status check.
+The Switch will attempt to send an Echo Request only when there is no activity from a Bank for a pre-determined length of time*.  The Bank will be marked as Unavailable if no response is received after a number of retries* or there are no further requests or responses from it.  This will prevent the Bank from receiving or sending payment requests.  A System Notification Message will be sent to all Banks to advise them of  this unavailability.
+The Switch is required to send an Echo Request in order to ensure that the Bank is available to receive payment requests.  
+It is optional for a Bank to send Echo Request to the Switch.
+(*The number of and interval between retries is configurable).
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="GrpHdr" type="er:GrpHdr">
+        <xs:annotation>
+          <xs:documentation source="Index">1.0</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="EchoTxInf" type="er:EchoTxInf">
+        <xs:annotation>
+          <xs:documentation source="Index">2.0</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="EchoTxInf">
+    <xs:sequence>
+      <xs:element name="FnctnCd" type="er:EchoCode"/>
+      <xs:element name="InstrId" type="er:Max35Text"/>
+      <xs:element name="InstgAgt" type="er:BranchAndFinancialInstitutionIdentification4"/>
+      <xs:element name="InstdAgt" type="er:BranchAndFinancialInstitutionIdentification4"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="FinancialInstitutionIdentification7">
+    <xs:sequence>
+      <xs:element name="BIC" type="er:BICIdentifier"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="GrpHdr">
+    <xs:sequence>
+      <xs:element name="MsgId" type="er:Max35Text"/>
+      <xs:element name="CreDtTm" type="er:ISODateTime"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="ISODateTime">
+    <xs:restriction base="xs:dateTime"/>
+  </xs:simpleType>
+  <xs:simpleType name="Max35Text">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="35"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

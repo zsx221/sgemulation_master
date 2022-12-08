@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- edited with XMLSpy v2013 (http://www.altova.com) by pcvincent -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="urn:iso:std:iso:20022:tech:xsd:stmt.003.001.01" targetNamespace="urn:iso:std:iso:20022:tech:xsd:stmt.003.001.01" elementFormDefault="qualified">
+	<xs:element name="Document" type="Document"/>
+	<xs:complexType name="Document">
+		<xs:sequence>
+			<xs:element name="BkToCstmrStmt" type="BankToCustomerStatementV02"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="BankToCustomerStatementV02">
+		<xs:sequence>
+			<xs:element name="GrpHdr" type="GroupHeader42"/>
+			<xs:element name="Stmt" type="AccountStatement2" minOccurs="2" maxOccurs="2"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="GroupHeader42">
+		<xs:sequence>
+			<xs:element name="CreDtTm" type="ISODateTime"/>
+			<xs:element name="MsgPgntn" type="Pagination"/>
+			<xs:element name="AddtlInf" type="Max500Text"/>
+			<xs:element name="SysNm" type="Max35Text"/>
+			<xs:element name="RptTtle" type="Max35Text"/>
+			<xs:element name="Ccy" type="Max35Text"/>
+			<xs:element name="SttlCycl" type="Max35Text"/>
+			<xs:element name="SttlPrd" type="ISODate"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Pagination">
+		<xs:sequence>
+			<xs:element name="PgNb" type="Max5NumericText"/>
+			<xs:element name="LastPgInd" type="YesNoIndicator"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="AccountStatement2">
+		<xs:sequence>
+			<xs:element name="Id" type="Max35Text"/>
+			<xs:element name="Acct" type="AcctInfo1" maxOccurs="unbounded"/>
+			<xs:element name="GrndTtl" type="GrandTtl1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="AcctInfo1">
+		<xs:sequence>
+			<xs:element name="Id" type="BICIdentifier" maxOccurs="1"/>
+			<xs:element name="Nm" type="Max70Text" maxOccurs="1"/>
+			<xs:element name="TxsSummry" type="TxnSum1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TxnSum1">
+		<xs:sequence>
+			<xs:element name="TtlDbtNtries" type="DbtSum1"/>
+			<xs:element name="TtlCdtNtries" type="CdtSum1"/>
+			<xs:element name="TtlDbtRvrslNtries" type="DbtRvslSum1"/>
+			<xs:element name="TtlBlnceAmt" type="TtlBalAmt1"/>
+			<xs:element name="CdtDbtInd" type="CdtDbtInd1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="GrandTtl1">
+		<xs:sequence>
+			<xs:element name="TtlDbtNtries" type="DbtSum1"/>
+			<xs:element name="TtlCdtNtries" type="CdtSum1"/>
+			<xs:element name="TtlDbtRvrslNtries" type="DbtRvslSum1"/>
+			<xs:element name="TtlBlnceAmt" type="TtlBalAmt1"/>
+			<xs:element name="CdtDbtInd" type="CdtDbtInd1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="DbtSum1">
+		<xs:sequence>
+			<xs:element name="Sum" type="DecimalNumber" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="CdtSum1">
+		<xs:sequence>
+			<xs:element name="Sum" type="DecimalNumber" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="DbtRvslSum1">
+		<xs:sequence>
+			<xs:element name="Sum" type="DecimalNumber" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TtlBalAmt1">
+		<xs:sequence>
+			<xs:element name="Sum" type="DecimalNumber" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="CdtDbtInd1">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="CRDT"/>
+			<xs:enumeration value="DBIT"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="DecimalNumber">
+		<xs:restriction base="xs:decimal">
+			<xs:fractionDigits value="17"/>
+			<xs:totalDigits value="18"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="BICIdentifier">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[A-Z]{6,6}[A-Z2-9][A-NP-Z0-9]([A-Z0-9]{3,3}){0,1}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="YesNoIndicator">
+		<xs:restriction base="xs:boolean"/>
+	</xs:simpleType>
+	<xs:simpleType name="ISODate">
+		<xs:restriction base="xs:date"/>
+	</xs:simpleType>
+	<xs:simpleType name="ISODateTime">
+		<xs:restriction base="xs:dateTime"/>
+	</xs:simpleType>
+	<xs:simpleType name="Max500Text">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="500"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Max5NumericText">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[0-9]{1,5}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Max35Text">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="35"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Max70Text">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="70"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

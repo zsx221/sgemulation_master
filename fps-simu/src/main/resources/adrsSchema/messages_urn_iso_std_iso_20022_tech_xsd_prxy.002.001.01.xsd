@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2013 (http://www.altova.com) by  () -->
+<xs:schema xmlns:p2="urn:iso:std:iso:20022:tech:xsd:prxy.002.001.01" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:iso:std:iso:20022:tech:xsd:prxy.002.001.01" elementFormDefault="qualified">
+<xs:simpleType name="BICFIIdentifier">
+<xs:annotation>
+<xs:documentation source="Example">BANKSGSGXXX</xs:documentation>
+</xs:annotation>
+<xs:restriction base="xs:string">
+<xs:pattern value="[A-Z]{6,6}[A-Z2-9][A-NP-Z0-9]([A-Z0-9]{3,3}){0,1}"/>
+</xs:restriction>
+</xs:simpleType>
+<xs:complexType name="BranchAndFinancialInstitutionIdentification5">
+<xs:sequence>
+<xs:element name="FinInstnId" type="p2:FinancialInstitutionIdentification8"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="Document">
+<xs:sequence>
+<xs:element name="PrxyRegnRspn" type="p2:ProxyRegistrationResponseV01"/>
+</xs:sequence>
+</xs:complexType>
+<xs:simpleType name="ExternalStatusReason1Code">
+<xs:annotation>
+<xs:documentation source="Example">AC01</xs:documentation>
+</xs:annotation>
+<xs:restriction base="xs:string">
+<xs:minLength value="1"/>
+<xs:maxLength value="4"/>
+<xs:enumeration value="AG03"/>
+<xs:enumeration value="RC02"/>
+<xs:enumeration value="RC03"/>
+</xs:restriction>
+</xs:simpleType>
+<xs:complexType name="FinancialInstitutionIdentification8">
+<xs:sequence>
+<xs:element name="BICFI" type="p2:BICFIIdentifier"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="GroupHeader60">
+<xs:sequence>
+<xs:element name="MsgId" type="p2:Max35Text"/>
+<xs:element name="CreDtTm" type="p2:ISODateTime"/>
+<xs:element name="MsgRcpt" type="p2:Party12Choice"/>
+</xs:sequence>
+</xs:complexType>
+<xs:simpleType name="ISODateTime">
+<xs:restriction base="xs:dateTime"/>
+</xs:simpleType>
+<xs:simpleType name="Max12Text">
+<xs:restriction base="xs:string">
+<xs:minLength value="1"/>
+<xs:maxLength value="12"/>
+</xs:restriction>
+</xs:simpleType>
+<xs:simpleType name="Max140Text">
+<xs:restriction base="xs:string">
+<xs:minLength value="1"/>
+<xs:maxLength value="140"/>
+</xs:restriction>
+</xs:simpleType>
+<xs:simpleType name="Max35Text">
+<xs:restriction base="xs:string">
+<xs:minLength value="1"/>
+<xs:maxLength value="35"/>
+</xs:restriction>
+</xs:simpleType>
+<xs:complexType name="OriginalGroupInformation3">
+<xs:sequence>
+<xs:element name="OrgnlMsgId" type="p2:Max35Text"/>
+<xs:element name="OrgnlMsgNmId" type="p2:Max35Text"/>
+<xs:element name="OrgnlCreDtTm" type="p2:ISODateTime" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="Party12Choice">
+<xs:choice>
+<xs:element name="Agt" type="p2:BranchAndFinancialInstitutionIdentification5"/>
+</xs:choice>
+</xs:complexType>
+<xs:complexType name="ProxyDefintion1">
+<xs:sequence>
+<xs:element name="Tp" type="p2:Max12Text"/>
+<xs:element name="Val" type="p2:Max140Text"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="ProxyRegistrationAccount1">
+<xs:sequence>
+<xs:element name="RegnId" type="p2:Max35Text" minOccurs="0"/>
+<xs:element name="Agt" type="p2:BranchAndFinancialInstitutionIdentification5" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="ProxyRegistrationResponse1">
+<xs:sequence>
+<xs:element name="PrxRspnSts" type="p2:ProxyStatusCode"/>
+<xs:element name="StsRsnInf" type="p2:ProxyStatusChoice" minOccurs="0"/>
+<xs:element name="OrgnlRegnTp" type="p2:ProxyRegistrationType1Code"/>
+<xs:element name="OrgnlRegnSubTp" type="p2:ProxyRegistrationSubType1Code" minOccurs="0"/>
+<xs:element name="OrgnlPrxy" type="p2:ProxyDefintion1" minOccurs="0"/>
+<xs:element name="PrxyRegn" type="p2:ProxyRegistrationAccount1" minOccurs="0" maxOccurs="unbounded"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="ProxyRegistrationResponseV01">
+<xs:annotation>
+<xs:documentation source="Product/Usage 1">Response to a registration of a proxy type and value in CAS.</xs:documentation>
+</xs:annotation>
+<xs:sequence>
+<xs:element name="GrpHdr" type="p2:GroupHeader60">
+<xs:annotation>
+<xs:documentation source="Index">1.0</xs:documentation>
+</xs:annotation>
+</xs:element>
+<xs:element name="OrgnlGrpInf" type="p2:OriginalGroupInformation3">
+<xs:annotation>
+<xs:documentation source="Index">2.0</xs:documentation>
+</xs:annotation>
+</xs:element>
+<xs:element name="RegnRspn" type="p2:ProxyRegistrationResponse1">
+<xs:annotation>
+<xs:documentation source="Product/Usage 1">Details of the registration response from CAS.</xs:documentation>
+<xs:documentation source="Index">3.0</xs:documentation>
+</xs:annotation>
+</xs:element>
+</xs:sequence>
+</xs:complexType>
+<xs:simpleType name="ProxyRegistrationSubType1Code">
+<xs:annotation>
+<xs:documentation source="Example">PRXY</xs:documentation>
+</xs:annotation>
+<xs:restriction base="xs:string">
+<xs:minLength value="1"/>
+<xs:maxLength value="4"/>
+<xs:enumeration value="ACCT"/>
+<xs:enumeration value="PRAC"/>
+<xs:enumeration value="PRXY"/>
+<xs:enumeration value="RGID"/>
+</xs:restriction>
+</xs:simpleType>
+<xs:simpleType name="ProxyRegistrationType1Code">
+<xs:annotation>
+<xs:documentation source="Example">NEWR</xs:documentation>
+</xs:annotation>
+<xs:restriction base="xs:string">
+<xs:minLength value="1"/>
+<xs:maxLength value="4"/>
+<xs:enumeration value="AMND"/>
+<xs:enumeration value="DEAC"/>
+<xs:enumeration value="NEWR"/>
+<xs:enumeration value="OVER"/>
+</xs:restriction>
+</xs:simpleType>
+<xs:complexType name="ProxyStatusChoice">
+<xs:choice>
+<xs:element name="Cd" type="p2:ExternalStatusReason1Code">
+<xs:annotation>
+<xs:documentation source="Example">AG03</xs:documentation>
+</xs:annotation>
+</xs:element>
+<xs:element name="Prtry" type="p2:Max35Text"/>
+</xs:choice>
+</xs:complexType>
+<xs:simpleType name="ProxyStatusCode">
+<xs:annotation>
+<xs:documentation source="Example">ACTC</xs:documentation>
+</xs:annotation>
+<xs:restriction base="xs:string">
+<xs:minLength value="1"/>
+<xs:maxLength value="4"/>
+<xs:enumeration value="ACTC"/>
+<xs:enumeration value="RJCT"/>
+</xs:restriction>
+</xs:simpleType>
+</xs:schema>
