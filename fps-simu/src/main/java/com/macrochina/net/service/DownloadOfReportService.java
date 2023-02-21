@@ -68,6 +68,7 @@ public class DownloadOfReportService {
                 zipFileName =org.replace("YYYYMMDD",dateYYYYMMdd).replace("YYYYYYYY",RandomStringUtils.randomNumeric(8))+sttlmt_cycle;
             }else{
                 try {
+                    fileNameOld = fileName.substring(0,fileName.length()-4);
                     targetfileName = fileNameOld.substring(0,9)+dateYYYYMMdd+fileNameOld.substring(17);
                     zipFileName =org.replace("YYYYMMDD",dateYYYYMMdd).replace("YYYYYYYY",RandomStringUtils.randomNumeric(8))+sttlmt_cycle;
                     sigFile = new File(FileUtils.REPORT_TARGET +"/" +  targetfileName+ ".SIG");
@@ -107,6 +108,10 @@ public class DownloadOfReportService {
         return  file;
     }
 
+    public static void main(String[] args) {
+        String fileNameOld = "fffffffffffffffffff"; //copy之前的文件名,用于打包
+        String targetfileName = fileNameOld.substring(0,9)+"dateYYYYMMdd"+fileNameOld.substring(17);
+    }
     public File get421(String file_name ,String dateYYYYMMdd, String sttlmt_cycle){
         File zipFile = null;
         File dir = null;
