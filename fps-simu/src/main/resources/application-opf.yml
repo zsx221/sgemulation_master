@@ -14,7 +14,7 @@ spring:
       maximum-pool-size: 100
       connection-test-query: SELECT 1
       connection-timeout: 30000
-      spring.datasource.hikari.max-lifetime: 1800000
+      max-lifetime: 1800000
       pool-name: SGFPSHikariCP
       idle-timeout: 600000
     #data: classpath:opf.sql
@@ -33,8 +33,8 @@ spring:
     password: 123456
     base: dc=example,dc=com
 server:
-  #  port: 9090
-  port: 8080
+  port: 9090
+#  port: 8080
   max-http-header-size: 102400
   servlet:
     context-path: /sgfps

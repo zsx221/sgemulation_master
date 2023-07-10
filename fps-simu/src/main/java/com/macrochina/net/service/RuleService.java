@@ -64,6 +64,7 @@ public class RuleService {//200
         if (targetXmlEntity == null) {
             return null;
         }
+        //fiToFICstmrCdtTrf
         try {
             int index = fieldName.indexOf(".");
             if (index == 0) {
@@ -114,25 +115,22 @@ public class RuleService {//200
         if (StringUtils.isEmpty(bizMsgDefIdr)) {
             return null;
         }
-        Specification<BizRuleSet> bizRuleSetSpecification = new Specification<BizRuleSet>() {
-            @Override
-            public Predicate toPredicate(Root<BizRuleSet> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
-                List<Predicate> predicates = new ArrayList<Predicate>();//这里Predicate用来做运算类型或者是说查询条件
-                predicates.add(criteriaBuilder.equal(root.get("status"), "0"));
-                //criteriaBuilder.equal(Expression,字符串)，第一个参数是为哪个字段设置条件，第二个参数就是需要设置的值
-                //解析一下这一句，就是where status(这个对应的是数据库里面字段)=0 查出来的数据放在这个链表里面
-                //root 相当于 from   ，CriteriaBuilder相当于where后面的各种的条件，比如>,<,=等    criteriaQuery就相当于后面的条件比如orderby，或者where等等
-                predicates.add(criteriaBuilder.equal(root.get("bizType"), bizMsgDefIdr));//添加数据库的规则
-                Order prority = criteriaBuilder.asc(root.get("prority"));//根据prority进行正序排序
-                if (predicates != null) {
-                    criteriaQuery.where(predicates.toArray(new Predicate[0]));
-                }
-                return criteriaQuery.orderBy(prority).getRestriction();
+        Specification<BizRuleSet> bizRuleSetSpecification = (root, criteriaQuery, criteriaBuilder) -> {
+            List<Predicate> predicates = new ArrayList<>();//这里Predicate用来做运算类型或者是说查询条件
+            predicates.add(criteriaBuilder.equal(root.get("status"), "0"));
+            //criteriaBuilder.equal(Expression,字符串)，第一个参数是为哪个字段设置条件，第二个参数就是需要设置的值
+            //解析一下这一句，就是where status(这个对应的是数据库里面字段)=0 查出来的数据放在这个链表里面
+            //root 相当于 from   ，CriteriaBuilder相当于where后面的各种的条件，比如>,<,=等    criteriaQuery就相当于后面的条件比如orderby，或者where等等
+            predicates.add(criteriaBuilder.equal(root.get("bizType"), bizMsgDefIdr));//添加数据库的规则
+            Order prority = criteriaBuilder.asc(root.get("prority"));//根据prority进行正序排序
+            if (predicates != null) {
+                criteriaQuery.where(predicates.toArray(new Predicate[0]));
             }
+            return criteriaQuery.orderBy(prority).getRestriction();
         };
         List<BizRuleSet> bizRuleSetList = bizRuleSetRepository.findAll(bizRuleSetSpecification);
         for (BizRuleSet bizRuleSet : bizRuleSetList) {
-            Specification<BizRuleData> bizRuleDataSpecification = (Specification<BizRuleData>) (root, criteriaQuery, criteriaBuilder) -> {
+            Specification<BizRuleData> bizRuleDataSpecification = (root, criteriaQuery, criteriaBuilder) -> {
                 Predicate predicate = null;
                 predicate = criteriaBuilder.equal(root.get("rid"), bizRuleSet.getId());
                 if (predicate != null) {

@@ -6,28 +6,20 @@ spring:
       ddl-auto: update
     show-sql: true
   datasource:
-    url: jdbc:postgresql://sgall-psql.cx5abd0ylvg3.ap-southeast-1.rds.amazonaws.com:5432/sgall?currentSchema=public
-    username: sgalluser
-    password: Password4
-#    driver-class-name: com.mysql.cj.jdbc.Driver
-    driver-class-name: org.postgresql.Driver
-    hikari:
-      maximum-pool-size: 100
-      connection-test-query: SELECT 1
-      connection-timeout: 30000
-      max-lifetime: 1800000
-      pool-name: SGFPSHikariCP
-      idle-timeout: 600000
+    url: jdbc:mysql://sgall-mysql.default.svc.cluster.local:3306/sgfps?allowPublicKeyRetrieval=true&useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
+    username: root
+    password: mysql@123
+    driver-class-name: com.mysql.cj.jdbc.Driver
     #data: classpath:opf.sql
     platform: mysql
     initialization-mode: always
   application:
-      name: fps
+    name: fps
   devtools:
-      restart:
-        enabled: true
+    restart:
+      enabled: true
   session:
-      timeout: 36000S
+    timeout: 36000S
   ldap:
 #    urls: ldap://ldaps-service.default.svc.cluster.local:636  #636
 #    username: cn=admin,${spring.ldap.base}

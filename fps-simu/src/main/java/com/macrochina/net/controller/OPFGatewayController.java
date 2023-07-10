@@ -49,7 +49,7 @@ public class OPFGatewayController {
     @RequestMapping(value = "/FAST/payment-callbacks", method = RequestMethod.POST)
     @ResponseBody
     public Map paymentCallbacks(@RequestBody PaymentCallbacks paymentCallbacks, HttpServletResponse response) {
-       //200
+        //200
         Message message = new Message();
         message.setTag("OpfGateway");
         message.setMsgId("");
@@ -57,8 +57,9 @@ public class OPFGatewayController {
         message.setDirct(Integer.parseInt(SysParamsContst.INWARD));
         message.setRemark(JSONObject.toJSONString(paymentCallbacks));
         messageService.save(message);
-        return ack(response,"payment-callbacks",paymentCallbacks);
+        return ack(response, "payment-callbacks", paymentCallbacks);
     }
+
     @ApiOperation(value = "Posting", notes = "")
     @RequestMapping(value = "/posting-requests", method = RequestMethod.POST)
     @ResponseBody
@@ -74,49 +75,49 @@ public class OPFGatewayController {
         PostingRequests postingRequests = new PostingRequests(postingRequestsDto);//发来的json数据也存到规定的实体类里面
         FpsParam fpsParam = fpsParamService.findById();//通过id查找所有的数据,不为空的话就返回第一个数据，为空就返回空
         JSONObject jsonObject = new JSONObject();
-        BizRuleSet bizRuleSet = ruleService.ruleOption("posting",postingRequests);//把json数据的类型和数据传进去处理,然后返回一个命中的规则
-        boolean flag = RetryAfter429.retryAfter(response,bizRuleSet);
-        if(!flag){ //httpcode为429时直接return
+        BizRuleSet bizRuleSet = ruleService.ruleOption("posting", postingRequests);//把json数据的类型和数据传进去处理,然后返回一个命中的规则
+        boolean flag = RetryAfter429.retryAfter(response, bizRuleSet);
+        if (!flag) { //httpcode为429时直接return
             return null;
         }
         Map res = new HashMap();
-        if(bizRuleSet==null ||(bizRuleSet != null && "200".equals(bizRuleSet.getHttpResp()))){
+        if (bizRuleSet == null || "200".equals(bizRuleSet.getHttpResp())) {
 
             response.setStatus(200);
-            if (bizRuleSet != null ){
-                res.put("errorCode",  bizRuleSet.getErrorCode());
+            if (bizRuleSet != null) {
+                res.put("errorCode", bizRuleSet.getErrorCode());
                 res.put("errorDescription", bizRuleSet.getErrorMessage());
             }
-        }else if(bizRuleSet != null && !"200".equals(bizRuleSet.getHttpResp())){
+        } else if (bizRuleSet != null && !"200".equals(bizRuleSet.getHttpResp())) {
             res.put("errorCode", bizRuleSet.getErrorCode());
             res.put("errorDescription", bizRuleSet.getErrorMessage());
-            response.setStatus(Integer.valueOf(bizRuleSet.getHttpResp()));
+            response.setStatus(Integer.parseInt(bizRuleSet.getHttpResp()));
             return res;
         }
 
 
         //bizRuleSet==null ||(bizRuleSet != null && "200".equals(bizRuleSet.getHttpResp()))才会执行
-        jsonObject.put("postingRequestId",postingRequestsDto.getPostingRequestId());
-        jsonObject.put("opfTransactionId",postingRequestsDto.getOpfTransactionId());
-        jsonObject.put("status", StringUtils.isEmpty(res.get("errorCode"))?"SUCCESS":"FAILED");
-        jsonObject.put("rejectReasonCode",res.get("errorCode"));
-        jsonObject.put("rejectReasonDesc",res.get("errorDescription"));
-        jsonObject.put("transactionType",postingRequests.getTransactionType());
-        jsonObject.put("reverseTransaction",postingRequests.getReverseTransaction());
+        jsonObject.put("postingRequestId", postingRequestsDto.getPostingRequestId());
+        jsonObject.put("opfTransactionId", postingRequestsDto.getOpfTransactionId());
+        jsonObject.put("status", StringUtils.isEmpty(res.get("errorCode")) ? "SUCCESS" : "FAILED");
+        jsonObject.put("rejectReasonCode", res.get("errorCode"));
+        jsonObject.put("rejectReasonDesc", res.get("errorDescription"));
+        jsonObject.put("transactionType", postingRequests.getTransactionType());
+        jsonObject.put("reverseTransaction", postingRequests.getReverseTransaction());
 
         //713 新增
-        if(org.apache.commons.lang3.StringUtils.isNotBlank(postingRequests.getBcsTransactionId()) || org.apache.commons.lang3.StringUtils.isNotBlank(postingRequests.getBcsInstructionId())){
-            jsonObject.put("bcsTransactionId",postingRequests.getBcsTransactionId());
-            jsonObject.put("bcsInstructionId",postingRequests.getBcsInstructionId());
+        if (org.apache.commons.lang3.StringUtils.isNotBlank(postingRequests.getBcsTransactionId()) || org.apache.commons.lang3.StringUtils.isNotBlank(postingRequests.getBcsInstructionId())) {
+            jsonObject.put("bcsTransactionId", postingRequests.getBcsTransactionId());
+            jsonObject.put("bcsInstructionId", postingRequests.getBcsInstructionId());
         }
 
 
-        Map<String,String> map = new HashMap<String,String>();
+        Map<String, String> map = new HashMap<String, String>();
         map.put("Content-Type", "application/json;charset=utf-8");
         String url = fpsParam.getHostAdr() + "/channel/G3/FAST/postingcallbacks";
-       // String url = "https://localhost:3306"+ "/channel/G3/FAST/postingcallbacks";
+        // String url = "https://localhost:3306"+ "/channel/G3/FAST/postingcallbacks";
         if (bizRuleSet != null) {
-            opfGatewayService.delaySendCallback(bizRuleSet, jsonObject, map, url,postingRequestsDto);
+            opfGatewayService.delaySendCallback(bizRuleSet, jsonObject, map, url, postingRequestsDto);
             Integer isTimeOut = bizRuleSet.getIsTimeOut();
             String httpResp = bizRuleSet.getHttpResp();
             String status = bizRuleSet.getResp_status();
@@ -136,9 +137,9 @@ public class OPFGatewayController {
                     return res;
                 }
             }
-        }else{
+        } else {
             response.setStatus(Integer.valueOf(200));
-            if("1".equals(fpsParam.getAutoReturnPostingCallback())) {
+            if ("1".equals(fpsParam.getAutoReturnPostingCallback())) {
                 opfGatewayService.delaySendCallback(bizRuleSet, jsonObject, map, url, postingRequestsDto);
             }
 
@@ -150,8 +151,7 @@ public class OPFGatewayController {
     /**
      * @return void
      * @Author fangyu
-     * @Description
-     * "endToEndId": "FPS-13214432324532412321",
+     * @Description "endToEndId": "FPS-13214432324532412321",
      * "opfTransactionId": "12345678901234567890xxxxx",
      * "errorCode": "ERR_OPF_001",
      * "debugMessage": "Rejected as counter party bank is sanction bank"
@@ -171,74 +171,70 @@ public class OPFGatewayController {
         msg.setRemark(JSONObject.toJSONString(inwardPaymentInstructionsDto));
         messageService.save(msg);
         InwardPaymentInstructions inwardPaymentInstructions = new InwardPaymentInstructions(inwardPaymentInstructionsDto);
-        BizRuleSet bizRuleSet = ruleService.ruleOption("inward-payment-instructions",inwardPaymentInstructions);
-        boolean flag = RetryAfter429.retryAfter(response,bizRuleSet);
-        if(!flag){ //httpcode为429时直接return
+        BizRuleSet bizRuleSet = ruleService.ruleOption("inward-payment-instructions", inwardPaymentInstructions);
+        boolean flag = RetryAfter429.retryAfter(response, bizRuleSet);
+        if (!flag) { //httpcode为429时直接return
             return null;
         }
         Map res = new HashMap();
         Acct acct = acctService.findAcctByBankAcct(inwardPaymentInstructionsDto.getPayeeAccountId());
 
         //是否校验账号
-        if("1".equals(fpsParam.getAccountValidation())){
-            if(acct==null){
+        if ("1".equals(fpsParam.getAccountValidation())) {
+            if (acct == null) {
                 res.put("errorCode", "ERR_PAY_151");
                 res.put("debugMessage", "Invalid Receiving Account No");
-            }else if("7".equals(acct.getState())){
+            } else if ("7".equals(acct.getState())) {
                 res.put("errorCode", "ERR_PAY_156");
                 res.put("debugMessage", "Beneficiary Account Closed");
-            }else if(inwardPaymentInstructionsDto.getPayeeName().equals(acct.getAcctNm())){
+            } else if (inwardPaymentInstructionsDto.getPayeeName().equals(acct.getAcctNm())) {
                 res.put("errorCode", "ERR_PAY_158");
                 res.put("debugMessage", "Beneficiary Account Name Does Not Match Beneficiary Account Number");
-            }else if("9".equals(acct.getState())){
+            } else if ("9".equals(acct.getState())) {
                 res.put("errorCode", "ERR_PAY_162");
                 res.put("debugMessage", "Blocked Account");
             }
         }
 
-        if(bizRuleSet == null ||(bizRuleSet != null && "200".equals(bizRuleSet.getHttpResp()))){
-            res.put("paymentInstructionId",UUID.randomUUID().toString());
+        if (bizRuleSet == null || (bizRuleSet != null && "200".equals(bizRuleSet.getHttpResp()))) {
+            res.put("paymentInstructionId", UUID.randomUUID().toString());
             res.put("clientTransactionId", UUID.randomUUID().toString());
-            res.put("endToEndId",inwardPaymentInstructionsDto.getEndToEndId());
-            res.put("opfTransactionId",inwardPaymentInstructionsDto.getOpfTransactionId());
+            res.put("endToEndId", inwardPaymentInstructionsDto.getEndToEndId());
+            res.put("opfTransactionId", inwardPaymentInstructionsDto.getOpfTransactionId());
             //713 新增
-            if(org.apache.commons.lang3.StringUtils.isNotBlank(inwardPaymentInstructionsDto.getBcsTransactionId()) ||
-                    org.apache.commons.lang3.StringUtils.isNotBlank(inwardPaymentInstructionsDto.getPaymentPurpose()) ||
-                    org.apache.commons.lang3.StringUtils.isNotBlank(inwardPaymentInstructionsDto.getBcsInstructionId())){
-                res.put("bcsTransactionId",inwardPaymentInstructionsDto.getBcsTransactionId());
-                res.put("bcsInstructionId",inwardPaymentInstructionsDto.getBcsInstructionId());
-                res.put("paymentPurpose",inwardPaymentInstructionsDto.getPaymentPurpose());
+            if (org.apache.commons.lang3.StringUtils.isNotBlank(inwardPaymentInstructionsDto.getBcsTransactionId()) || org.apache.commons.lang3.StringUtils.isNotBlank(inwardPaymentInstructionsDto.getPaymentPurpose()) || org.apache.commons.lang3.StringUtils.isNotBlank(inwardPaymentInstructionsDto.getBcsInstructionId())) {
+                res.put("bcsTransactionId", inwardPaymentInstructionsDto.getBcsTransactionId());
+                res.put("bcsInstructionId", inwardPaymentInstructionsDto.getBcsInstructionId());
+                res.put("paymentPurpose", inwardPaymentInstructionsDto.getPaymentPurpose());
             }
             response.setStatus(200);
-            if(bizRuleSet != null && bizRuleSet.getErrorCode() != null){
+            if (bizRuleSet != null && bizRuleSet.getErrorCode() != null) {
                 res.put("errorCode", bizRuleSet.getErrorCode());
                 res.put("debugMessage", bizRuleSet.getErrorMessage());
             }
-        }else{
+        } else {
             res.put("errorCode", bizRuleSet.getErrorCode());
             res.put("errorDescription", bizRuleSet.getErrorMessage());
             response.setStatus(Integer.valueOf(bizRuleSet.getHttpResp()));
         }
-        if("AIIN".equals(inwardPaymentInstructionsDto.getPayeeAccountIdType())){
-            res.put("payeeInternalAccountId","");
-            res.put("payerInternalAccountId",inwardPaymentInstructionsDto.getPayerAccountId());
-            res.put("paymentInstructionId",UUID.randomUUID().toString());
+        if ("AIIN".equals(inwardPaymentInstructionsDto.getPayeeAccountIdType())) {
+            res.put("payeeInternalAccountId", "");
+            res.put("payerInternalAccountId", inwardPaymentInstructionsDto.getPayerAccountId());
+            res.put("paymentInstructionId", UUID.randomUUID().toString());
             res.put("clientTransactionId", UUID.randomUUID().toString());
-            res.put("endToEndId",inwardPaymentInstructionsDto.getEndToEndId());
-            res.put("opfTransactionId",inwardPaymentInstructionsDto.getOpfTransactionId());
+            res.put("endToEndId", inwardPaymentInstructionsDto.getEndToEndId());
+            res.put("opfTransactionId", inwardPaymentInstructionsDto.getOpfTransactionId());
             //713 新增
-            if(org.apache.commons.lang3.StringUtils.isNotBlank(inwardPaymentInstructionsDto.getBcsTransactionId()) ||
-                    org.apache.commons.lang3.StringUtils.isNotBlank(inwardPaymentInstructionsDto.getPaymentPurpose()) ||
-                    org.apache.commons.lang3.StringUtils.isNotBlank(inwardPaymentInstructionsDto.getBcsInstructionId())){
-                res.put("bcsTransactionId",inwardPaymentInstructionsDto.getBcsTransactionId());
-                res.put("bcsInstructionId",inwardPaymentInstructionsDto.getBcsInstructionId());
-                res.put("paymentPurpose",inwardPaymentInstructionsDto.getPaymentPurpose());
+            if (org.apache.commons.lang3.StringUtils.isNotBlank(inwardPaymentInstructionsDto.getBcsTransactionId()) || org.apache.commons.lang3.StringUtils.isNotBlank(inwardPaymentInstructionsDto.getPaymentPurpose()) || org.apache.commons.lang3.StringUtils.isNotBlank(inwardPaymentInstructionsDto.getBcsInstructionId())) {
+                res.put("bcsTransactionId", inwardPaymentInstructionsDto.getBcsTransactionId());
+                res.put("bcsInstructionId", inwardPaymentInstructionsDto.getBcsInstructionId());
+                res.put("paymentPurpose", inwardPaymentInstructionsDto.getPaymentPurpose());
             }
-            if(acct==null){
+            if (acct == null) {
                 res.put("errorCode", "ERR_PAY_151");
                 res.put("debugMessage", "Invalid Receiving Account No .Coverage Rule");
-            }else{
-                res.put("payeeInternalAccountId",acct.getPhxCard());
+            } else {
+                res.put("payeeInternalAccountId", acct.getPhxCard());
             }
         }
         Message message = new Message();
@@ -255,11 +251,7 @@ public class OPFGatewayController {
     @ApiOperation(value = "Get Tx limits", notes = "")
     @RequestMapping(value = "/transaction-limits/limit", method = RequestMethod.POST)
     @ResponseBody
-    public Map transactionLimits(@RequestParam String customerId ,
-                                 @RequestParam double amount  ,
-                                 @RequestParam String limitCategory ,
-                                 @RequestParam String tracingId  ,
-                                 HttpServletRequest request, HttpServletResponse response) {
+    public Map transactionLimits(@RequestParam String customerId, @RequestParam double amount, @RequestParam String limitCategory, @RequestParam String tracingId, HttpServletRequest request, HttpServletResponse response) {
 //        Message msg = new Message();
 //        msg.setTag("OpfGateway");
 //        msg.setMsgId(MessageUtils.genMsgId());
@@ -273,7 +265,7 @@ public class OPFGatewayController {
         transactionLimits.setCustomerId(customerId);
         transactionLimits.setLimitCategory(limitCategory);
         transactionLimits.setTracingId(tracingId);
-        return ack(response,"transaction-limits-limit",transactionLimits);
+        return ack(response, "transaction-limits-limit", transactionLimits);
     }
 
 
@@ -288,13 +280,13 @@ public class OPFGatewayController {
         msg.setDirct(Integer.parseInt(SysParamsContst.INWARD));
         msg.setRemark(JSONObject.toJSONString(payNowMaintenanceCallbacks));
         messageService.save(msg);
-        return ack(response,"PayNowMaintenance-callbacks",payNowMaintenanceCallbacks);
+        return ack(response, "PayNowMaintenance-callbacks", payNowMaintenanceCallbacks);
     }
 
     @ApiOperation(value = "PayNowLookUp-callbacks", notes = "")
     @RequestMapping(value = "/PayNowLookUp-callbacks", method = RequestMethod.POST)
     @ResponseBody
-    public Map payNowLookUpCallbacks( @RequestBody PayNowLookUpCallbacks payNowMaintenanceCallbacks, HttpServletResponse response) {
+    public Map payNowLookUpCallbacks(@RequestBody PayNowLookUpCallbacks payNowMaintenanceCallbacks, HttpServletResponse response) {
         Message msg = new Message();
         msg.setTag("OpfGateway");
         msg.setMsgId(payNowMaintenanceCallbacks.getCTxnId());
@@ -302,13 +294,13 @@ public class OPFGatewayController {
         msg.setDirct(Integer.parseInt(SysParamsContst.INWARD));
         msg.setRemark(JSONObject.toJSONString(payNowMaintenanceCallbacks));
         messageService.save(msg);
-        return ack(response,"PayNowLookUp-callbacks",payNowMaintenanceCallbacks);
+        return ack(response, "PayNowLookUp-callbacks", payNowMaintenanceCallbacks);
     }
 
     @ApiOperation(value = "PayNowEnquiry-callbacks", notes = "")
     @RequestMapping(value = "/PayNowEnquiry-callbacks", method = RequestMethod.POST)
     @ResponseBody
-    public Map payNowEnquiryCallbacks(@RequestBody PayNowEnquiryCallbacks payNowEnquiryCallbacks,HttpServletResponse response){
+    public Map payNowEnquiryCallbacks(@RequestBody PayNowEnquiryCallbacks payNowEnquiryCallbacks, HttpServletResponse response) {
         Message msg = new Message();
         msg.setTag("OpfGateway");
         msg.setMsgId("PayNowEnquiry-callbacks");
@@ -316,12 +308,13 @@ public class OPFGatewayController {
         msg.setDirct(Integer.parseInt(SysParamsContst.INWARD));
         msg.setRemark(JSONObject.toJSONString(payNowEnquiryCallbacks));
         messageService.save(msg);
-        return ack(response,"PayNowEnquiry-callbacks",payNowEnquiryCallbacks);
+        return ack(response, "PayNowEnquiry-callbacks", payNowEnquiryCallbacks);
     }
+
     @ApiOperation(value = "PayNowReport-callbacks", notes = "")
     @RequestMapping(value = "/PayNowReport-callbacks", method = RequestMethod.POST)
     @ResponseBody
-    public Map payNowReportCallbacks(@RequestBody PayNowReportCallbacks payNowReportCallbacks,HttpServletResponse response){
+    public Map payNowReportCallbacks(@RequestBody PayNowReportCallbacks payNowReportCallbacks, HttpServletResponse response) {
         Message msg = new Message();
         msg.setTag("OpfGateway");
         msg.setMsgId("PayNowReport-callbacks");
@@ -329,13 +322,13 @@ public class OPFGatewayController {
         msg.setDirct(Integer.parseInt(SysParamsContst.INWARD));
         msg.setRemark(JSONObject.toJSONString(payNowReportCallbacks));
         messageService.save(msg);
-        return ack(response,"PayNowReport-callbacks",payNowReportCallbacks);
+        return ack(response, "PayNowReport-callbacks", payNowReportCallbacks);
     }
 
     @ApiOperation(value = "participant-detail", notes = "")
     @RequestMapping(value = "/participant-detail", method = RequestMethod.POST)
     @ResponseBody
-    public Map participantDetail(@RequestBody ParticipantDetail participantDetail,HttpServletResponse response){
+    public Map participantDetail(@RequestBody ParticipantDetail participantDetail, HttpServletResponse response) {
         Message msg = new Message();
         msg.setTag("OpfGateway");
         msg.setMsgId("");
@@ -343,7 +336,7 @@ public class OPFGatewayController {
         msg.setDirct(Integer.parseInt(SysParamsContst.INWARD));
         msg.setRemark(JSONObject.toJSONString(participantDetail));
         messageService.save(msg);
-        return ack(response,"participant-detail",participantDetail);
+        return ack(response, "participant-detail", participantDetail);
     }
 
     @ApiOperation(value = "/opf-gateway/banks/{bic}/is-blocked")
@@ -353,39 +346,38 @@ public class OPFGatewayController {
         Message msg = new Message();
         msg.setTag("OpfGateway");
         msg.setMsgId(bic);
-        msg.setMsgDef("/banks/"+bic+"/is-blocked");
+        msg.setMsgDef("/banks/" + bic + "/is-blocked");
         msg.setDirct(Integer.parseInt(SysParamsContst.INWARD));
         msg.setRemark(JSONObject.toJSONString(bic));
         messageService.save(msg);
-        return ack(response,"is-blocked"," {'blocked': true}");
+        return ack(response, "is-blocked", " {'blocked': true}");
     }
 
 
     //直接回复ack
-    private Map ack(HttpServletResponse response,String bizMsgDefIdr, Object object) {
+    private Map ack(HttpServletResponse response, String bizMsgDefIdr, Object object) {
         Map res = new HashMap();
         BizRuleSet bizRuleSet = ruleService.ruleOption(bizMsgDefIdr, object);
-        if(bizRuleSet==null ||(bizRuleSet != null && "200".equals(bizRuleSet.getHttpResp()))){
+        if (bizRuleSet == null || "200".equals(bizRuleSet.getHttpResp())) {
             response.setStatus(200);
-            if (bizRuleSet != null ){
-                res.put("errorCode",  bizRuleSet.getErrorCode());
+            if (bizRuleSet != null) {
+                res.put("errorCode", bizRuleSet.getErrorCode());
                 res.put("errorDescription", bizRuleSet.getErrorMessage());
             }
-        }else{
+        } else {
             res.put("errorCode", bizRuleSet.getErrorCode());
             res.put("errorDescription", bizRuleSet.getErrorMessage());
-            response.setStatus(Integer.valueOf(bizRuleSet.getHttpResp()));
+            response.setStatus(Integer.parseInt(bizRuleSet.getHttpResp()));
         }
         Message message = new Message();
         message.setTag("OpfGateway");
         message.setMsgId(MessageUtils.genMsgId());
-        message.setMsgDef(bizMsgDefIdr+"-response");
+        message.setMsgDef(bizMsgDefIdr + "-response");
         message.setDirct(Integer.parseInt(SysParamsContst.OUTWARD));
         message.setRemark(JSONObject.toJSONString(res));
         messageService.save(message);
         return res;
     }
-
 
 
 }

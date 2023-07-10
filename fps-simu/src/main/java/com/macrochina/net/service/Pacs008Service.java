@@ -101,7 +101,7 @@ public class Pacs008Service {
         FpsParam param = fpsParamService.findById();
         //接收报文接收对象
         Document documentPacs008 = new Document();
-        documentPacs008 = (Document) dbToXmlService.DbToXml(map, documentPacs008);
+          documentPacs008 = (Document) dbToXmlService.DbToXml(map, documentPacs008);
         HdrAndData fpsevnp = new HdrAndData();
         BusinessApplicationHeaderV01 appHdr = new BusinessApplicationHeaderV01();
         String msgId = map.get("msgId").toString();
@@ -119,9 +119,9 @@ public class Pacs008Service {
         try {
             String xml = ConvertUtils.marshal(fpsevnp, true);
 
-            String username = "";
-            String password = "";
-            String partition = "", method = "", alias = "";
+//            String username = "";
+//            String password = "";
+//            String partition = "", method = "", alias = "";
 
             FpsParam fpsParam = fpsParamService.findById();
             String xmlSign = fpsParamService.xmlStringSign(xml);

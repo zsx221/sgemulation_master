@@ -21,30 +21,30 @@ public class SignController {
     @Autowired
     private FpsParamService fpsParamService;
 
-    @ApiOperation(value = "加签验签",notes = "")
+    @ApiOperation(value = "加签验签", notes = "")
     @RequestMapping("/signAndVerifySign")
-    public Res signAndVerifySign(@RequestParam String xml){
-        return Res.Success(service.verifySignByPublicKey(NewXmlSignUtil.xmlStringSign(xml,"off","wx","1234","","",""),""));
+    public Res signAndVerifySign(@RequestParam String xml) {
+        return Res.Success(service.verifySignByPublicKey(NewXmlSignUtil.xmlStringSign(xml, "off", "wx", "1234", "", "", ""), ""));
     }
 
-    @ApiOperation(value = "加签",notes = "")
+    @ApiOperation(value = "加签", notes = "")
     @RequestMapping("/signXml")
-    public String signXml(@RequestParam("xml") String xml, String off,String user,
-                          String password,String partition,String method,
-                          String alias){
+    public String signXml(@RequestParam("xml") String xml, String off, String user,
+                          String password, String partition, String method,
+                          String alias) {
       /*  String isSign = fpsParamService.findById().getIsSign();
         if("0".equals(isSign)){
         //    logger.info("No sign operation is performed");
             return xml;
         }*/
-        String sign = NewXmlSignUtil.xmlStringSign(xml,off,user,password,partition,method,alias);
+        String sign = NewXmlSignUtil.xmlStringSign(xml, off, user, password, partition, method, alias);
         return sign;
     }
 
-    @ApiOperation(value = "验签",notes = "")
+    @ApiOperation(value = "验签", notes = "")
     @RequestMapping("/verifySignByPublicKey")
-    public boolean verifySignByPublicKey(@RequestBody String xml){
-        return service.verifySignByPublicKey(xml,"");
+    public boolean verifySignByPublicKey(@RequestBody String xml) {
+        return service.verifySignByPublicKey(xml, "");
     }
 
    /* public static void mains(String[] args) {

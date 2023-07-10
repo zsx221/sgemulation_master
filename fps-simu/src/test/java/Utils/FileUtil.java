@@ -11,10 +11,16 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
+import java.io.File;
+import java.io.IOException;
 
+// 使用OpenCV实现目标
+// 引入OpenCV
+//import org.opencv.core.Core;
+//import org.opencv.core.Mat;
+//import org.opencv.imgcodecs.Imgcodecs;
 import java.io.*;
 import java.util.Objects;
-import org.apache.commons.fileupload.FileItem;
 /**
  * @auther Yoko
  */
@@ -99,5 +105,32 @@ public class FileUtil {
                 .contentLength(testBytes.length)
                 .contentType(MediaType.parseMediaType("application/octet-stream"))
                 .body(new InputStreamResource(in));
+    }
+
+
+    public static void main(String[] args) {
+//        // 主函数
+//
+//            // 加载本地图片
+//            Mat src = Imgcodecs.imread("test.jpg");
+//            if (src.empty()) {
+//                System.out.println("图片加载失败");
+//                return;
+//            }
+//            // 对图片进行模糊处理
+//            Mat dst = new Mat();
+//            Imgproc.GaussianBlur(src, dst, new Size(3, 3), 0, 0);
+//            // 查找图片中所有相似元素的位置和坐标范围
+//            Mat result = new Mat();
+//            Imgproc.findContours(dst, result, new Mat(), Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_NONE);
+//            // 对所有元素进行标号
+//            int index = 1;
+//            for (int i = 0; i < result.rows(); i++) {
+//                Imgproc.putText(dst, String.valueOf(index++), new Point(result.get(i, 0)), Core.FONT_HERSHEY_SIMPLEX, 0.5, new Scalar(255, 0, 0));
+//            }
+//            // 显示结果
+//            Imgcodecs.imshow("Result", dst);
+//            Imgcodecs.waitKey(0);
+
     }
 }

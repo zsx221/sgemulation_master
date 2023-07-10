@@ -1,3 +1,5 @@
 spring:
   profiles:
-    active: poc
+    active: opf
+
+#Privatekey: /home/UploadsFile/autoInsert

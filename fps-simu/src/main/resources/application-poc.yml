@@ -1,4 +1,6 @@
 spring:
+  resources:
+    static-locations: "classpath:/dist"
   jpa:
     hibernate:
       naming:
@@ -9,11 +11,12 @@ spring:
     #    url: jdbc:mysql://sgall-mysql.default.svc.cluster.local:3306/sgfps?allowPublicKeyRetrieval=true&useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
     #    username: root
     #    password: mysql@123
-    #url: jdbc:mysql://192.168.0.127:3306/sgfps?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
-    url: jdbc:mysql://182.61.138.205:3306/sgfps?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
+#    url: jdbc:mysql://192.168.0.127:3306/sgfps?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
+#    url: jdbc:mysql://182.61.138.205:3306/sgfps?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://192.168.0.127:3306/sj?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
     username: root
     password: 123456
-    #password: OTAxN&hiN2Vk
+#    password: OTAxN&hiN2Vk
     driver-class-name: com.mysql.cj.jdbc.Driver
   application:
     name: fps
@@ -31,13 +34,22 @@ spring:
     username: cn=admin,${spring.ldap.base}
     password: 123456
     base: dc=example,dc=com
+
+
 server:
-  port: 9090
-  #port: 8080
+#  port: 9090
+  port: 8080
   max-http-header-size: 102400
   servlet:
     context-path: /sgfps
     session:
       timeout: 36000S
+
+jasypt:
+  encryptor:
+    # 加密的盐值，为了安全，该配置可以放在启动参数或者命令行参数中
+    password: fa7bd4edd42448aea8c9484fbce6e8cd
+    # 加密所采用的算法
+    algorithm: PBEWITHHMACSHA512ANDAES_256
 
 

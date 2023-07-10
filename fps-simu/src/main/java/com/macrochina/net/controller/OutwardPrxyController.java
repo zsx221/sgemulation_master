@@ -45,7 +45,7 @@ public class OutwardPrxyController {
     @Autowired
     private PaynowService paynowService;
     @ApiOperation(value = "prxy001")
-    @PostMapping(value = "/registration/request")
+        @PostMapping(value = "/registration/request")
     public void request(@RequestBody String xml, HttpServletResponse response) {
         log.info("incoming receive prxy001 String xml =  " + xml);
         String url = FileUtils.OUTWARD_RT_ACK + MessageUtils.getXmlName();

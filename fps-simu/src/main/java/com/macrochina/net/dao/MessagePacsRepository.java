@@ -8,7 +8,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface MessagePacsRepository extends JpaRepository<MessagePacs,Integer> , JpaSpecificationExecutor {
-    MessagePacs findByMsgDefAndBizMsgIdr(String msgDef,String bizMsgIdr);
+public interface MessagePacsRepository extends JpaRepository<MessagePacs, Integer>, JpaSpecificationExecutor {
+    MessagePacs findByMsgDefAndBizMsgIdr(String msgDef, String bizMsgIdr);
 
+    @Modifying
+    @Query("delete from  message_pacs ")
+    void deleteAll();
 }
